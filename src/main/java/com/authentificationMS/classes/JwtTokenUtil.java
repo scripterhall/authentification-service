@@ -1,7 +1,7 @@
 package com.authentificationMS.classes;
 
 import com.authentificationMS.models.MembreStatus;
-import io.jsonwebtoken.Claims;
+import com.authentificationMS.models.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -24,7 +25,8 @@ public class JwtTokenUtil {
     public String generateTokenMembre(String email, String username, Long id,
                                 String adresse, String nom,
                                 String prenom, String telephone,
-                                MembreStatus status, Date date_inscription) {
+                                MembreStatus status, Date date_inscription,
+                                      List<Role> roles) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration * 1000);
@@ -37,6 +39,7 @@ public class JwtTokenUtil {
         claims.put("nom",nom);
         claims.put("prenom",prenom);
         claims.put("telephone",telephone);
+        claims.put("roles",roles);
         claims.put("iat", now);
         claims.put("exp", expiryDate);
 
@@ -51,8 +54,8 @@ public class JwtTokenUtil {
     public String generateTokenChefProjet(String email, String username, Long id,
                                       String adresse, String nom,
                                       String prenom, String telephone,
-                                      Date date_inscription
-                                      ) {
+                                      Date date_inscription,String roles
+                                          ) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration * 1000);
@@ -65,6 +68,7 @@ public class JwtTokenUtil {
         claims.put("nom",nom);
         claims.put("prenom",prenom);
         claims.put("telephone",telephone);
+        claims.put("roles",roles);
         claims.put("iat", now);
         claims.put("exp", expiryDate);
 
