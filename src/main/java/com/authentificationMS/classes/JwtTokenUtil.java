@@ -4,10 +4,10 @@ import com.authentificationMS.models.MembreStatus;
 import com.authentificationMS.models.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import javax.crypto.SecretKey;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,11 +43,9 @@ public class JwtTokenUtil {
         claims.put("iat", now);
         claims.put("exp", expiryDate);
 
-        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(secretKey)
+                .signWith(SignatureAlgorithm.HS256,secret)
                 .compact();
     }
 
@@ -71,12 +69,9 @@ public class JwtTokenUtil {
         claims.put("roles",roles);
         claims.put("iat", now);
         claims.put("exp", expiryDate);
-
-        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(secretKey)
+                .signWith(SignatureAlgorithm.HS256,secret)
                 .compact();
     }
 

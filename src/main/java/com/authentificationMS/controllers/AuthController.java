@@ -8,18 +8,22 @@ import com.authentificationMS.models.Role;
 import com.authentificationMS.services.ChefProjetFeignClient;
 import com.authentificationMS.services.MembreFeignClient;
 import com.authentificationMS.services.RoleFeignClient;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +42,8 @@ public class AuthController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    
+
     private boolean checkPassword(String password, String encryptedPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(password, encryptedPassword);
@@ -47,7 +53,7 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody Credentials credentials) {
         String email = credentials.getEmail();
         String password = credentials.getPwd();
-
+        System.out.println("tests");
         Membre membre = membreFeignClient.getMembreByEmail(email);
         ChefProjet chefProjet = chefProjetFeignClient.getChefProjetByEmail(email);
 
@@ -76,7 +82,11 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
+    
+    @GetMapping("/init")
+    public ResponseEntity<Void> prepareSecure(){
+        return ResponseEntity.ok().body(null);
+    }
 
 }
 
