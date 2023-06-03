@@ -1,16 +1,14 @@
 package com.authentificationMS.classes;
 
 import com.authentificationMS.models.MembreStatus;
-import io.jsonwebtoken.Claims;
+import com.authentificationMS.models.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JwtTokenUtil {
@@ -24,7 +22,8 @@ public class JwtTokenUtil {
     public String generateTokenMembre(String email, String username, Long id,
                                 String adresse, String nom,
                                 String prenom, String telephone,
-                                MembreStatus status, Date date_inscription) {
+                                MembreStatus status, Date dateInscription,
+                                      List<Role> roles, String pwd, byte[] photo) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration * 1000);
@@ -37,8 +36,17 @@ public class JwtTokenUtil {
         claims.put("nom",nom);
         claims.put("prenom",prenom);
         claims.put("telephone",telephone);
+        claims.put("roles",roles);
+        claims.put("dateInscription", dateInscription);
+        claims.put("status",status);
+        claims.put("pwd", pwd);
         claims.put("iat", now);
         claims.put("exp", expiryDate);
+
+        if (photo != null) {
+            claims.put("photo", Base64.getEncoder().encodeToString(photo));
+        }
+
 
         SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
@@ -51,8 +59,8 @@ public class JwtTokenUtil {
     public String generateTokenChefProjet(String email, String username, Long id,
                                       String adresse, String nom,
                                       String prenom, String telephone,
-                                      Date date_inscription
-                                      ) {
+                                      Date dateInscription,String roles, byte[] photo,
+                                          String pwd) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration * 1000);
@@ -65,8 +73,15 @@ public class JwtTokenUtil {
         claims.put("nom",nom);
         claims.put("prenom",prenom);
         claims.put("telephone",telephone);
+        claims.put("roles",roles);
+        claims.put("dateInscription", dateInscription);
+        claims.put("pwd", pwd);
         claims.put("iat", now);
         claims.put("exp", expiryDate);
+
+        if (photo != null) {
+            claims.put("photo", Base64.getEncoder().encodeToString(photo));
+        }
 
         SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 

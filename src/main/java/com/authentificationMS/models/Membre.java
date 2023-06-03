@@ -13,4 +13,5 @@ public class Membre extends Personne{
     
     private Long id ;
     private MembreStatus status ;
+    private byte[] photo;
 }
