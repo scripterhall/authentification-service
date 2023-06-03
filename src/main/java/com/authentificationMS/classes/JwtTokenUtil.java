@@ -4,11 +4,15 @@ import com.authentificationMS.models.MembreStatus;
 import com.authentificationMS.models.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import javax.crypto.SecretKey;
-import java.util.*;
+
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
@@ -47,12 +51,9 @@ public class JwtTokenUtil {
             claims.put("photo", Base64.getEncoder().encodeToString(photo));
         }
 
-
-        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(secretKey)
+                .signWith(SignatureAlgorithm.HS256,secret)
                 .compact();
     }
 
@@ -83,11 +84,9 @@ public class JwtTokenUtil {
             claims.put("photo", Base64.getEncoder().encodeToString(photo));
         }
 
-        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(secretKey)
+                .signWith(SignatureAlgorithm.HS256,secret)
                 .compact();
     }
 
