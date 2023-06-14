@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -51,7 +53,6 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody Credentials credentials) {
         String email = credentials.getEmail();
         String password = credentials.getPwd();
-        System.out.println("tests");
         Membre membre = membreFeignClient.getMembreByEmail(email);
         ChefProjet chefProjet = chefProjetFeignClient.getChefProjetByEmail(email);
 
@@ -64,6 +65,10 @@ public class AuthController {
 
                 Map<String, String> response = new HashMap<>();
                 response.put("token",token);
+                if(photo!=null)
+                response.put("photo", Base64.getEncoder().encodeToString(photo));
+                else
+                response.put("photo", "");
                 return ResponseEntity.ok().body(response);
             }
         }
@@ -73,11 +78,20 @@ public class AuthController {
             if (checkPassword(password, membre.getPwd())) {
                 String token = jwtTokenUtil.generateTokenMembre(membre.getEmail(), membre.getUsername(), membre.getId(),
                         membre.getAdresse(), membre.getNom(), membre.getPrenom(), membre.getTelephone(),
-                        membre.getStatus(), membre.getDateInscription(), roleFeignClient.getRolesByMembreId(membre.getId()),
+                        membre.getStatus(), membre.getDateInscription(), roleFeignClient.getRolesByMembreId(membre.getId()).stream()
+                        .map(role -> {
+                            role.getMembre().setPhoto(null); 
+                            return role;
+                        })
+                        .collect(Collectors.toList()),
                         membre.getPwd(), photo);
 
                 Map<String, String> response = new HashMap<>();
                 response.put("token",token);
+                if(photo!=null)
+                response.put("photo", Base64.getEncoder().encodeToString(photo));
+                else
+                response.put("photo", "");
                 return ResponseEntity.ok().body(response);
             }
         }

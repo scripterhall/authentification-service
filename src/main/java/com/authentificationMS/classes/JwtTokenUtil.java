@@ -47,9 +47,9 @@ public class JwtTokenUtil {
         claims.put("iat", now);
         claims.put("exp", expiryDate);
 
-        if (photo != null) {
-            claims.put("photo", Base64.getEncoder().encodeToString(photo));
-        }
+        // if (photo != null) {
+        //     claims.put("photo", Base64.getEncoder().encodeToString(photo));
+        // }
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -80,9 +80,9 @@ public class JwtTokenUtil {
         claims.put("iat", now);
         claims.put("exp", expiryDate);
 
-        if (photo != null) {
-            claims.put("photo", Base64.getEncoder().encodeToString(photo));
-        }
+        // if (photo != null) {
+        //     claims.put("photo", Base64.getEncoder().encodeToString(photo));
+        // }
 
         return Jwts.builder()
                 .setClaims(claims)
